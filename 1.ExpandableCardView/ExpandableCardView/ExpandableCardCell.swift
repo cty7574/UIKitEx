@@ -14,6 +14,8 @@ final class ExpandableCardCell: UITableViewCell {
         }
     }
     
+    var onExpandTapped: (() -> Void)?
+    
     private let titleLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
@@ -45,6 +47,17 @@ final class ExpandableCardCell: UITableViewCell {
         return label
     }()
     
+    private lazy var expandButton: UIButton = {
+        let button: UIButton = UIButton(type: .system)
+        button.backgroundColor = .clear
+        button.tintColor = .systemGray
+        button.addAction(UIAction { [weak self] _ in
+            self?.onExpandTapped?()
+        }, for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setConstraints()
@@ -60,11 +73,20 @@ final class ExpandableCardCell: UITableViewCell {
         titleLabel.text = card.title
         contentLabel.text = card.content
         profileImageView.image = UIImage(systemName: card.profileImage)
+        
+        if card.isExpand {
+            contentLabel.numberOfLines = 0
+            expandButton.setTitle("접기", for: .normal)
+        } else {
+            contentLabel.numberOfLines = 1
+            expandButton.setTitle("더보기", for: .normal)
+        }
     }
     
     private func setConstraints() {
         contentView.addSubview(profileStackView)
         contentView.addSubview(contentLabel)
+        contentView.addSubview(expandButton)
         
         NSLayoutConstraint.activate([
             profileImageView.widthAnchor.constraint(equalToConstant: 40),
@@ -77,7 +99,10 @@ final class ExpandableCardCell: UITableViewCell {
             contentLabel.topAnchor.constraint(equalTo: profileStackView.bottomAnchor, constant: 16),
             contentLabel.leadingAnchor.constraint(equalTo: profileStackView.leadingAnchor),
             contentLabel.trailingAnchor.constraint(equalTo: profileStackView.trailingAnchor),
-            contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            
+            expandButton.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 8),
+            expandButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            expandButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
 }

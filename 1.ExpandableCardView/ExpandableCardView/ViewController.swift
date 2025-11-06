@@ -15,7 +15,7 @@ final class ViewController: UIViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.backgroundColor = .clear
-        tv.isScrollEnabled = false
+        tv.delaysContentTouches = false
         tv.register(ExpandableCardCell.self, forCellReuseIdentifier: "CardCell")
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
@@ -36,7 +36,9 @@ final class ViewController: UIViewController {
 }
 
 extension ViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
 }
 
 extension ViewController: UITableViewDataSource {
@@ -48,6 +50,13 @@ extension ViewController: UITableViewDataSource {
         guard let cell: ExpandableCardCell = tableView.dequeueReusableCell(withIdentifier: "CardCell", for: indexPath) as? ExpandableCardCell else { return UITableViewCell() }
         
         cell.card = viewModel.cards[indexPath.row]
+        cell.onExpandTapped = { [weak self] in
+            self?.viewModel.cards[indexPath.row].isExpand.toggle()
+            
+            tableView.beginUpdates()
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
+        }
         
         return cell
     }
