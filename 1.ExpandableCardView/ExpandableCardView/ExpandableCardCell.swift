@@ -72,13 +72,12 @@ final class ExpandableCardCell: UITableViewCell {
             
             profileStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             profileStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            profileStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 16),
-            profileStackView.heightAnchor.constraint(equalToConstant: 40),
+            profileStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             contentLabel.topAnchor.constraint(equalTo: profileStackView.bottomAnchor, constant: 16),
             contentLabel.leadingAnchor.constraint(equalTo: profileStackView.leadingAnchor),
             contentLabel.trailingAnchor.constraint(equalTo: profileStackView.trailingAnchor),
-            contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
 }

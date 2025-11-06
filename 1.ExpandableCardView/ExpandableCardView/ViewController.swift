@@ -8,12 +8,15 @@
 import UIKit
 
 final class ViewController: UIViewController {
+    private var viewModel: ViewModel = ViewModel()
+    
     private lazy var tableView: UITableView = {
         let tv: UITableView = UITableView()
+        tv.delegate = self
+        tv.dataSource = self
         tv.backgroundColor = .clear
         tv.isScrollEnabled = false
-        tv.separatorStyle = .none
-        tv.backgroundColor = .red
+        tv.register(ExpandableCardCell.self, forCellReuseIdentifier: "CardCell")
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
@@ -29,6 +32,24 @@ final class ViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+}
+
+extension ViewController: UITableViewDelegate {
+    
+}
+
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.cards.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell: ExpandableCardCell = tableView.dequeueReusableCell(withIdentifier: "CardCell", for: indexPath) as? ExpandableCardCell else { return UITableViewCell() }
+        
+        cell.card = viewModel.cards[indexPath.row]
+        
+        return cell
     }
 }
 
