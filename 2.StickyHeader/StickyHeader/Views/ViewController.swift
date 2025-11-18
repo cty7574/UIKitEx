@@ -8,9 +8,29 @@
 import UIKit
 
 final class ViewController: UITableViewController {
+    private lazy var backButton: UIBarButtonItem = .init(
+        image: UIImage(systemName: "chevron.left"),
+        style: .plain,
+        target: self,
+        action: nil
+    )
+    
+    private lazy var moreButton: UIBarButtonItem = .init(
+        image: UIImage(systemName: "ellipsis"),
+        style: .plain,
+        target: self,
+        action: nil
+    )
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setNavigationBar()
+    }
+    
+    private func setNavigationBar() {
+        navigationItem.leftBarButtonItem = backButton
+        navigationItem.rightBarButtonItem = moreButton
+        navigationController?.navigationBar.tintColor = .black
     }
 }
 
