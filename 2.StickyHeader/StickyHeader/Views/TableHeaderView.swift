@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HeaderView: UIView {
+final class TableHeaderView: UIView {
     private let mainImage: UIImageView = {
         let iv: UIImageView = UIImageView()
         iv.image = UIImage(systemName: "globe")
@@ -80,7 +80,7 @@ final class HeaderView: UIView {
         let st: UIStackView = UIStackView(arrangedSubviews: [starImageView, ratingLabel, timeImageView, timeLabel])
         st.axis = .horizontal
         st.spacing = 12
-        st.distribution = .fillProportionally
+        st.distribution = .fill
         st.alignment = .center
         st.translatesAutoresizingMaskIntoConstraints = false
         return st
@@ -109,9 +109,8 @@ final class HeaderView: UIView {
             titleLabel.topAnchor.constraint(equalTo: mainImage.bottomAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: mainImage.leadingAnchor),
             
-            infomationStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            infomationStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             infomationStackView.leadingAnchor.constraint(equalTo: mainImage.leadingAnchor),
-            infomationStackView.trailingAnchor.constraint(equalTo: mainImage.trailingAnchor),
             infomationStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
             
             starImageView.widthAnchor.constraint(equalToConstant: 15),

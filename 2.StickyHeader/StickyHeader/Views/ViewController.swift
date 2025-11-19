@@ -8,6 +8,8 @@
 import UIKit
 
 final class ViewController: UIViewController {
+    private var viewModel: ViewModel = .init()
+    
     private lazy var tableView: UITableView = {
         let tv: UITableView = UITableView()
         tv.delegate = self
@@ -15,9 +17,15 @@ final class ViewController: UIViewController {
         tv.backgroundColor = .clear
         tv.separatorStyle = .none
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tv.tableHeaderView = headerView
         tv.contentInsetAdjustmentBehavior = .never
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
+    }()
+    
+    private lazy var headerView: TableHeaderView = {
+        let hv: TableHeaderView = TableHeaderView()
+        return hv
     }()
     
     private lazy var backButton: UIBarButtonItem = .init(
@@ -41,6 +49,18 @@ final class ViewController: UIViewController {
         setNavigationBar()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        guard let header = tableView.tableHeaderView else { return }
+        let headerHeight: CGFloat = header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        
+        if header.frame.height != headerHeight {
+            header.frame.size.height = headerHeight
+            tableView.tableHeaderView = header
+        }
+    }
+    
     private func setConstraints() {
         view.addSubview(tableView)
         
@@ -59,7 +79,17 @@ final class ViewController: UIViewController {
     }
 }
 
+extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+    }
+}
+
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.sections.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
     }
@@ -71,7 +101,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header: HeaderView = .init()
-        return header
+        let sectionHeader: SectionHeaderView = .init()
+        sectionHeader.titleLabel.text = viewModel.sections[section]
+        return sectionHeader
     }
 }
