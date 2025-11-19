@@ -15,17 +15,11 @@ final class ViewController: UIViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.backgroundColor = .clear
-        tv.separatorStyle = .none
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tv.tableHeaderView = headerView
-        tv.contentInsetAdjustmentBehavior = .never
+        tv.tableHeaderView = TableHeaderView()
+        tv.contentInsetAdjustmentBehavior = .never // safeArea 보장 x
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
-    }()
-    
-    private lazy var headerView: TableHeaderView = {
-        let hv: TableHeaderView = TableHeaderView()
-        return hv
     }()
     
     private lazy var backButton: UIBarButtonItem = .init(
@@ -81,6 +75,13 @@ final class ViewController: UIViewController {
 
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let tableHeader = tableView.tableHeaderView as? TableHeaderView {
+            if scrollView.contentOffset.y < 0 {
+                
+            } else {
+                
+            }
+        }
         
     }
 }
@@ -91,7 +92,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return 5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
