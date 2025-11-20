@@ -17,7 +17,6 @@ final class ViewController: UIViewController {
         tv.backgroundColor = .clear
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tv.tableHeaderView = TableHeaderView()
-        tv.contentInsetAdjustmentBehavior = .never // safeArea 보장 x
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
@@ -46,6 +45,7 @@ final class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateHeaderLayout()
+        print(view.safeAreaInsets.top)
     }
     
     private func setConstraints() {
@@ -75,15 +75,13 @@ final class ViewController: UIViewController {
 
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-        
         if let tableHeader = tableView.tableHeaderView as? TableHeaderView {
             if scrollView.contentOffset.y < 0 {
-                tableHeader.mainImageViewTopAnchorConstraint.constant = scrollView.contentOffset.y
-                tableHeader.mainImageViewHeightConstraint.constant = tableHeader.originalImageHeight + abs(scrollView.contentOffset.y)
+                tableHeader.imageTopConstraint.constant = scrollView.contentOffset.y
+                tableHeader.imageHeightConstraint.constant = tableHeader.originalImageHeight + abs(scrollView.contentOffset.y)
             } else {
-                tableHeader.mainImageViewTopAnchorConstraint.constant = 0
-                tableHeader.mainImageViewHeightConstraint.constant = tableHeader.originalImageHeight
+                tableHeader.imageTopConstraint.constant = 0
+                tableHeader.imageHeightConstraint.constant = tableHeader.originalImageHeight
             }
             updateHeaderLayout()
         }
