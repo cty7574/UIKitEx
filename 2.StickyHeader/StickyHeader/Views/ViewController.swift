@@ -45,14 +45,7 @@ final class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        guard let header = tableView.tableHeaderView else { return }
-        let headerHeight: CGFloat = header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        
-        if header.frame.height != headerHeight {
-            header.frame.size.height = headerHeight
-            tableView.tableHeaderView = header
-        }
+        updateHeaderLayout()
     }
     
     private func setConstraints() {
@@ -71,16 +64,28 @@ final class ViewController: UIViewController {
         navigationItem.rightBarButtonItem = moreButton
         navigationController?.navigationBar.tintColor = .black
     }
+    
+    private func updateHeaderLayout() {
+        if let header = tableView.tableHeaderView {
+            header.frame.size.height = header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            tableView.tableHeaderView = header
+        }
+    }
 }
 
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
+        
         if let tableHeader = tableView.tableHeaderView as? TableHeaderView {
             if scrollView.contentOffset.y < 0 {
-                
+                tableHeader.mainImageViewTopAnchorConstraint.constant = scrollView.contentOffset.y
+                tableHeader.mainImageViewHeightConstraint.constant = tableHeader.originalImageHeight + abs(scrollView.contentOffset.y)
             } else {
-                
+                tableHeader.mainImageViewTopAnchorConstraint.constant = 0
+                tableHeader.mainImageViewHeightConstraint.constant = tableHeader.originalImageHeight
             }
+            updateHeaderLayout()
         }
         
     }
