@@ -21,25 +21,10 @@ final class ViewController: UIViewController {
         return tv
     }()
     
-    private lazy var backButton: UIBarButtonItem = .init(
-        image: UIImage(systemName: "chevron.left"),
-        style: .plain,
-        target: self,
-        action: nil
-    )
-    
-    private lazy var moreButton: UIBarButtonItem = .init(
-        image: UIImage(systemName: "ellipsis"),
-        style: .plain,
-        target: self,
-        action: nil
-    )
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setConstraints()
-        setNavigationBar()
     }
     
     override func viewDidLayoutSubviews() {
@@ -57,12 +42,6 @@ final class ViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-    }
-    
-    private func setNavigationBar() {
-        navigationItem.leftBarButtonItem = backButton
-        navigationItem.rightBarButtonItem = moreButton
-        navigationController?.navigationBar.tintColor = .black
     }
     
     private func updateHeaderLayout() {
