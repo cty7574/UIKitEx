@@ -21,22 +21,40 @@ final class ViewController: UIViewController {
         return tv
     }()
     
+    private let stickyHeaderView: StickyHeaderView = {
+        let view: StickyHeaderView = StickyHeaderView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var allSubViews: [UIView] {
+        return [tableView, stickyHeaderView]
+    }
+    
+    private var statusBarHeight: CGFloat {
+        return view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setConstraints()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateHeaderLayout()
-        print(view.safeAreaInsets.top)
+        setConstraints()
     }
     
     private func setConstraints() {
-        view.addSubview(tableView)
+        allSubViews.forEach { view.addSubview($0) }
         
         NSLayoutConstraint.activate([
+            stickyHeaderView.topAnchor.constraint(equalTo: view.topAnchor, constant: statusBarHeight),
+            stickyHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stickyHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
