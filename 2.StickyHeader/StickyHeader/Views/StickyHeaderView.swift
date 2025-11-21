@@ -8,7 +8,7 @@
 import UIKit
 
 final class StickyHeaderView: UIView {
-    private let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
         label.text = "Apple Foods"
@@ -16,7 +16,7 @@ final class StickyHeaderView: UIView {
         return label
     }()
     
-    private let subTitleLabel: UILabel = {
+    let subTitleLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.text = "Order Again"

@@ -23,7 +23,7 @@ final class ViewController: UIViewController {
     
     private let stickyHeaderView: StickyHeaderView = {
         let view: StickyHeaderView = StickyHeaderView()
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -35,6 +35,8 @@ final class ViewController: UIViewController {
     private var statusBarHeight: CGFloat {
         return view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
     }
+    
+    private var stickyHeaderIsShow: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,14 +70,34 @@ final class ViewController: UIViewController {
             tableView.tableHeaderView = header
         }
     }
+    
+    private func showStickyHeaderView() {
+        guard !stickyHeaderIsShow else { return }
+        
+        stickyHeaderIsShow = true
+        stickyHeaderView.backgroundColor = .white
+        stickyHeaderView.titleLabel.text = "Apple Foods"
+        stickyHeaderView.subTitleLabel.text = "Order Again"
+    }
+    
+    private func hideStickyHeaderView() {
+        guard stickyHeaderIsShow else { return }
+        
+        stickyHeaderIsShow = false
+        stickyHeaderView.backgroundColor = .clear
+        stickyHeaderView.titleLabel.text = ""
+        stickyHeaderView.subTitleLabel.text = ""
+    }
 }
 
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffsetY: CGFloat = scrollView.contentOffset.y
+        
         if let tableHeader = tableView.tableHeaderView as? TableHeaderView {
-            if scrollView.contentOffset.y < 0 {
+            if contentOffsetY < 0 {
                 tableHeader.imageTopConstraint.constant = scrollView.contentOffset.y
-                tableHeader.imageHeightConstraint.constant = tableHeader.originalImageHeight + abs(scrollView.contentOffset.y)
+                tableHeader.imageHeightConstraint.constant = tableHeader.originalImageHeight + abs(contentOffsetY)
             } else {
                 tableHeader.imageTopConstraint.constant = 0
                 tableHeader.imageHeightConstraint.constant = tableHeader.originalImageHeight
@@ -83,6 +105,12 @@ extension ViewController: UIScrollViewDelegate {
             updateHeaderLayout()
         }
         
+        
+        if stickyHeaderView.frame.height - contentOffsetY < 50 {
+            showStickyHeaderView()
+        } else {
+            hideStickyHeaderView()
+        }
     }
 }
 
