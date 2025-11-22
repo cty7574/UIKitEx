@@ -87,8 +87,8 @@ final class TableHeaderView: UIView {
     }()
     
     let originalImageHeight: CGFloat = 250.0
-    var imageTopConstraint: NSLayoutConstraint!
-    var imageHeightConstraint: NSLayoutConstraint!
+    lazy var imageTopConstraint: NSLayoutConstraint = mainImage.topAnchor.constraint(equalTo: self.topAnchor)
+    lazy var imageHeightConstraint: NSLayoutConstraint = mainImage.heightAnchor.constraint(equalToConstant: originalImageHeight)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -103,9 +103,6 @@ final class TableHeaderView: UIView {
         self.addSubview(mainImage)
         self.addSubview(titleLabel)
         self.addSubview(infomationStackView)
-        
-        imageTopConstraint = mainImage.topAnchor.constraint(equalTo: self.topAnchor)
-        imageHeightConstraint = mainImage.heightAnchor.constraint(equalToConstant: originalImageHeight)
         
         NSLayoutConstraint.activate([
             mainImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),

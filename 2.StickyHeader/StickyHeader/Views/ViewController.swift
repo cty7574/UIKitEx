@@ -52,8 +52,10 @@ final class ViewController: UIViewController {
     private func setConstraints() {
         allSubViews.forEach { view.addSubview($0) }
         
+        stickyHeaderView.stackViewTopConstraint.constant = statusBarHeight
+        
         NSLayoutConstraint.activate([
-            stickyHeaderView.topAnchor.constraint(equalTo: view.topAnchor, constant: statusBarHeight),
+            stickyHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
             stickyHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stickyHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
@@ -73,20 +75,24 @@ final class ViewController: UIViewController {
     
     private func showStickyHeaderView() {
         guard !stickyHeaderIsShow else { return }
-        
         stickyHeaderIsShow = true
-        stickyHeaderView.backgroundColor = .white
-        stickyHeaderView.titleLabel.text = "Apple Foods"
-        stickyHeaderView.subTitleLabel.text = "Order Again"
+        
+        UIView.animate(withDuration: 0.35) { [weak self] in
+            self?.stickyHeaderView.backgroundColor = .white
+            self?.stickyHeaderView.titleLabel.alpha = 1
+            self?.stickyHeaderView.subTitleLabel.alpha = 1
+        }
     }
     
     private func hideStickyHeaderView() {
         guard stickyHeaderIsShow else { return }
-        
         stickyHeaderIsShow = false
-        stickyHeaderView.backgroundColor = .clear
-        stickyHeaderView.titleLabel.text = ""
-        stickyHeaderView.subTitleLabel.text = ""
+        
+        UIView.animate(withDuration: 0.35) { [weak self] in
+            self?.stickyHeaderView.backgroundColor = .clear
+            self?.stickyHeaderView.titleLabel.alpha = 0
+            self?.stickyHeaderView.subTitleLabel.alpha = 0
+        }
     }
 }
 
@@ -106,7 +112,7 @@ extension ViewController: UIScrollViewDelegate {
         }
         
         
-        if stickyHeaderView.frame.height - contentOffsetY < 50 {
+        if contentOffsetY - stickyHeaderView.frame.height > statusBarHeight {
             showStickyHeaderView()
         } else {
             hideStickyHeaderView()

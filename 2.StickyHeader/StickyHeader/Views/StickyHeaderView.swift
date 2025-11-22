@@ -12,6 +12,7 @@ final class StickyHeaderView: UIView {
         let label: UILabel = UILabel()
         label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
         label.text = "Apple Foods"
+        label.alpha = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -21,6 +22,7 @@ final class StickyHeaderView: UIView {
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.text = "Order Again"
         label.textColor = .gray
+        label.alpha = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -69,6 +71,8 @@ final class StickyHeaderView: UIView {
         return self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
     }
     
+    lazy var stackViewTopConstraint: NSLayoutConstraint = stackView.topAnchor.constraint(equalTo: self.topAnchor)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -88,7 +92,7 @@ final class StickyHeaderView: UIView {
         allSubViews.forEach { self.addSubview($0) }
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
+            stackViewTopConstraint,
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             
