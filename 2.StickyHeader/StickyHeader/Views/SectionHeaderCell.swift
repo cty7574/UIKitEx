@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class SectionHeaderView: UIView {
+final class SectionHeaderCell: UITableViewCell {
     let titleLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = .boldSystemFont(ofSize: 18)
@@ -16,8 +16,8 @@ final class SectionHeaderView: UIView {
         return label
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
     
@@ -25,12 +25,16 @@ final class SectionHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        titleLabel.text = ""
+    }
+    
     private func setupUI() {
-        self.addSubview(titleLabel)
+        contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10)
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10)
         ])
     }
 }

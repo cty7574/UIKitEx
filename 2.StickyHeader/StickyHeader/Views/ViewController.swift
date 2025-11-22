@@ -100,6 +100,7 @@ extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let contentOffsetY: CGFloat = scrollView.contentOffset.y
         
+        // 메인 이미지 크기 조절
         if let tableHeader = tableView.tableHeaderView as? TableHeaderView {
             if contentOffsetY < 0 {
                 tableHeader.imageTopConstraint.constant = scrollView.contentOffset.y
@@ -111,11 +112,26 @@ extension ViewController: UIScrollViewDelegate {
             updateHeaderLayout()
         }
         
-        
+        // sticky header 노출/숨김 처리
         if contentOffsetY - stickyHeaderView.frame.height > statusBarHeight {
             showStickyHeaderView()
         } else {
             hideStickyHeaderView()
+        }
+        
+        // sticky header label에 현재 section 표시
+        guard let tableView: UITableView = scrollView as? UITableView else { return }
+        
+        if let visible = tableView.indexPathsForVisibleRows, let top = visible.first {
+            let currentSection = viewModel.sections[top.section]
+            
+            if currentSection != stickyHeaderView.subTitleLabel.text {
+                let label = stickyHeaderView.subTitleLabel
+                
+                UIView.transition(with: label, duration: 0.35, options: .transitionCrossDissolve) {
+                    label.text = currentSection
+                }
+            }
         }
     }
 }
@@ -130,14 +146,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionHeader: SectionHeaderView = .init()
-        sectionHeader.titleLabel.text = viewModel.sections[section]
-        return sectionHeader
+        if indexPath.row == 0 {
+            let headerCell: SectionHeaderCell = .init()
+            headerCell.titleLabel.text = viewModel.sections[indexPath.section]
+            return headerCell
+        } else {
+            let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+            return cell
+        }
     }
 }
